@@ -5,6 +5,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controlador responsável por gerenciar os endpoints de fallback dos serviços
+ * 
+ * Este controlador fornece endpoints que são chamados quando os serviços 
+ * downstream estão indisponíveis, retornando mensagens apropriadas para o cliente.
+ * 
+ * Cada método manipula o fallback de um serviço específico:
+ * - Serviço de Autenticação (/auth-fallback)
+ * - Serviço de Orçamento (/budget-fallback) 
+ * - Serviço de Categorias (/category-fallback)
+ * - Serviço de Moedas (/currency-fallback)
+ * - Serviço Financeiro (/finance-fallback)
+ * - Serviço de Notificações (/notification-fallback)
+ * - Serviço de Usuários (/user-fallback)
+ *
+ * Todos os endpoints retornam um ResponseEntity com status HTTP 503 (Service Unavailable)
+ * e uma mensagem indicando qual serviço está indisponível.
+ */
 
 @RestController
 public class FallBackController {
