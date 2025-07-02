@@ -1,4 +1,4 @@
-package com.finan_control.notification_service.email_service;
+package com.finan_control.email_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
