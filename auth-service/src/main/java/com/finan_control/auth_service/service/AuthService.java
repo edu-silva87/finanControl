@@ -16,6 +16,7 @@ import com.finan_control.auth_service.dtos.LoginResponseDto;
 import com.finan_control.auth_service.dtos.RegisterDto;
 import com.finan_control.auth_service.exception.InvalidPasswordException;
 import com.finan_control.auth_service.model.UserModel;
+import com.finan_control.auth_service.producer.WelcomeEmailProducer;
 import com.finan_control.auth_service.repository.UserRepository;
 import com.finan_control.auth_service.util.PasswordValidation;
 
@@ -25,12 +26,17 @@ public class AuthService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private JwtEncoder jwtEncoder;
+    private WelcomeEmailProducer welcomeEmailProducer;
 
-    public AuthService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-            JwtEncoder jwtEncoder) {
+    public AuthService(UserRepository userRepository, 
+            BCryptPasswordEncoder bCryptPasswordEncoder,
+            JwtEncoder jwtEncoder,
+            WelcomeEmailProducer welcomeEmailProducer) {
+
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtEncoder = jwtEncoder;
+        this.welcomeEmailProducer = welcomeEmailProducer;
     }
 
     public LoginResponseDto login(LoginRequestDto loginDto) {
@@ -77,7 +83,9 @@ public class AuthService {
                 .password(bCryptPasswordEncoder.encode(registerDto.password().toString()))
                 .build();
                 
+        
         userRepository.save(user);
+        welcomeEmailProducer.publishMessageEmail(userRepository.findByEmail(user.getEmail()).get());
     }
    
 

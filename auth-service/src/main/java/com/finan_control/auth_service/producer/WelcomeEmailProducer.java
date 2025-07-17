@@ -12,13 +12,23 @@ public class WelcomeEmailProducer extends EmailProducer{
         super(rabbitTemplate);
     }
 
+    String subject = "🎉 Bem-vindo(a) ao Finan Control. 🎉";
+    String text = "Olá,\n\n" +
+        "Parabéns por escolher o Finan Control para gerenciar seu dinheiro!\n\n" +
+        "Por que você vai adorar usar nossa plataforma:\n" +
+        "• Visão consolidada de todas as suas contas\n" +
+        "• Relatórios automáticos para entender seus gastos\n" +
+        "• Alertas e lembretes de pagamento\n\n" +
+        "Conte conosco em cada passo da sua jornada financeira!\n\n" +
+        "Equipe Finan Control";
+
     @Override
     public void publishMessageEmail(UserModel userModel) {
         EmailDto emailDto = EmailDto.builder()
             .userId(userModel.getId())
             .emailTo(userModel.getEmail())
-            .subject("Welcome to Finan Control")
-            .text("Welcome to Finan Control")
+            .subject(subject)
+            .text(text)
             .build();
         rabbitTemplate.convertAndSend("", routingKey, emailDto);
     }
