@@ -23,7 +23,7 @@ public class EmailConsumer {
     @RabbitListener(queues = "${broker.queue.email.name}")
     public void listenEmailQueue(@Payload EmailRecodDto emailRecordDto) {
         var emailModel = new EmailModel();
-        BeanUtils.copyProperties(emailModel, emailRecordDto);
+        BeanUtils.copyProperties(emailRecordDto, emailModel);
         emailService.sendEmail(emailModel);
     }
 }
