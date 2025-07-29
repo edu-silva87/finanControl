@@ -40,6 +40,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(authoreize -> authoreize
                 .requestMatchers(HttpMethod.POST, "auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "auth/changePassword").permitAll()
+                .requestMatchers(HttpMethod.POST, "auth/sendResetEmail").permitAll()
                 .anyRequest().authenticated()
             )
             .csrf(csrf -> csrf.disable())

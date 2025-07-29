@@ -2,82 +2,58 @@ package com.finan_control.api_gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestCustomizers;
+import org.springframework.security.oauth2.client.web.server.DefaultServerOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-/**
- * Configuração de segurança para o API Gateway
- * 
- * Esta classe é responsável por configurar a segurança do API Gateway, incluindo:
- * - Configuração do filtro de segurança
- * - Configuração das regras de autorização
- * - Configuração da autenticação via JWT
- */
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 
 @Configuration
+@EnableWebFluxSecurity
 public class SecurityConfig {
+
+    final ReactiveClientRegistrationRepository clientRegistrationRepository;
+
+    public SecurityConfig(ReactiveClientRegistrationRepository clientRegistrationRepository) {
+        this.clientRegistrationRepository = clientRegistrationRepository;
+    }
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-
-        /*
-         * Security Config 
-         * - Desabilitar CSRF
-         * - Permitir endpoints públicos (/auth/login, /auth/register)
-         * - Permitir acesso ao actuator
-         * - Exigir autenticação para outros endpoints
-         * - Configurar o conversor JWT para extrair claims e autoridades
-         */
-        return http
-            .csrf(ServerHttpSecurity.CsrfSpec::disable)
+        http
             .authorizeExchange(exchanges -> exchanges
-                .pathMatchers(HttpMethod.POST, "/auth/login","/auth/register").permitAll()  
-                .pathMatchers("/actuator/**").permitAll()
+                .pathMatchers(HttpMethod.POST, "/login").permitAll()
+                .pathMatchers("/login").denyAll()
                 .anyExchange().authenticated()
             )
-            .oauth2ResourceServer(resourceServer -> resourceServer
-                .jwt(jwt -> jwt
-                    .jwtAuthenticationConverter(jwtConverter())
+
+            .oauth2Login(oauth2 -> oauth2
+                .authorizationRequestResolver(authorizationRequestResolver(clientRegistrationRepository))
+                .authenticationSuccessHandler(
+                    new RedirectServerAuthenticationSuccessHandler(
+                        "http://localhost:3000/profile"
+                    )
                 )
             )
-            .build();
+            .csrf(ServerHttpSecurity.CsrfSpec::disable);
+
+        return http.build();
     }
 
-    /*
-     * JWT Converter
-     * - Extrai o username do claim 'sub'
-     * - Extrai as roles do claim 'roles'
-     * - Define ROLE_USER como padrão se não houver roles
-     * - Converte roles em GrantedAuthority
-     * - Cria um JwtAuthenticationToken com as informações
-     */
-    private Converter<Jwt, Mono<AbstractAuthenticationToken>> jwtConverter() {
-        return jwt -> {
-            String username = jwt.getClaimAsString("sub");
-            List<String> roles = jwt.getClaimAsStringList("roles");
-            if (roles == null || roles.isEmpty()) {
-                roles = Collections.singletonList("ROLE_USER");
-            }
-            
-            Collection<GrantedAuthority> authorities = roles.stream()
-                .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-            
-            return Mono.just(new JwtAuthenticationToken(jwt, authorities, username));
-        };
-    }
+    private ServerOAuth2AuthorizationRequestResolver authorizationRequestResolver(
+            ReactiveClientRegistrationRepository clientRegistrationRepository2) {
+                
+        var authorizationRequestResolver = new DefaultServerOAuth2AuthorizationRequestResolver(clientRegistrationRepository2);
+
+        authorizationRequestResolver
+            .setAuthorizationRequestCustomizer(OAuth2AuthorizationRequestCustomizers.withPkce());
+
+        return authorizationRequestResolver;
+    } 
+    
+    
 }

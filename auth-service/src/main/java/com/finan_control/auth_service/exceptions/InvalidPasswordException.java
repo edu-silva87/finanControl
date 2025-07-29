@@ -1,4 +1,4 @@
-package com.finan_control.auth_service.exception;
+package com.finan_control.auth_service.exceptions;
 
 public class InvalidPasswordException extends Exception{
     

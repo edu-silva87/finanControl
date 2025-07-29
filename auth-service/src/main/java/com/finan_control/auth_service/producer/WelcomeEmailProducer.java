@@ -6,14 +6,14 @@ import com.finan_control.auth_service.dtos.EmailDto;
 import com.finan_control.auth_service.model.UserModel;
 
 @Component
-public class WelcomeEmailProducer extends EmailProducer{
+public final class WelcomeEmailProducer extends EmailProducer{
 
     public WelcomeEmailProducer(RabbitTemplate rabbitTemplate) {
         super(rabbitTemplate);
     }
 
-    String subject = "🎉 Bem-vindo(a) ao Finan Control. 🎉";
-    String text = "Olá,\n\n" +
+    private final String subject = "🎉 Bem-vindo(a) ao Finan Control. 🎉";
+    private final String text = "Olá,\n\n" +
         "Parabéns por escolher o Finan Control para gerenciar seu dinheiro!\n\n" +
         "Por que você vai adorar usar nossa plataforma:\n" +
         "• Visão consolidada de todas as suas contas\n" +
