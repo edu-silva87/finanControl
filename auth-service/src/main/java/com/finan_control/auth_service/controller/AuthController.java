@@ -8,8 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.finan_control.auth_service.dtos.LoginRequestDto;
 import com.finan_control.auth_service.dtos.LoginResponseDto;
+import com.finan_control.auth_service.dtos.PasswordDto;
 import com.finan_control.auth_service.dtos.RegisterDto;
-import com.finan_control.auth_service.exception.InvalidPasswordException;
+import com.finan_control.auth_service.dtos.ResetPasswordDto;
+import com.finan_control.auth_service.exceptions.ExpireTokenException;
+import com.finan_control.auth_service.exceptions.InvalidPasswordException;
+import com.finan_control.auth_service.exceptions.InvalidTokenException;
 import com.finan_control.auth_service.service.AuthService;
 
 @RestController
@@ -33,6 +37,19 @@ public class AuthController {
     public ResponseEntity<Void> register(@RequestBody RegisterDto registerDto) throws InvalidPasswordException{
         authService.register(registerDto);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/sendResetEmail")
+    public ResponseEntity<String> sendResetEmail(@RequestBody PasswordDto sendResetEmailDto){
+        authService.sendResetEmail(sendResetEmailDto.email());
+        return ResponseEntity.ok().body("Token to reset password is send.");
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody ResetPasswordDto resetDto) throws
+                                            InvalidTokenException, InvalidPasswordException, ExpireTokenException{
+        authService.changePassword(resetDto);
+        return ResponseEntity.ok().body("Successful in change password");
     }
 
 }
