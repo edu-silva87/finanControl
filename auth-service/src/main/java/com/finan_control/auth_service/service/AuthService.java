@@ -1,6 +1,7 @@
 package com.finan_control.auth_service.service;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,6 +27,8 @@ import com.finan_control.auth_service.repository.TokenRepository;
 import com.finan_control.auth_service.repository.UserRepository;
 import com.finan_control.auth_service.util.PasswordValidation;
 
+import jakarta.validation.Valid;
+
 @Service
 public class AuthService {
 
@@ -50,7 +53,7 @@ public class AuthService {
         this.tokenRepository = tokenRepository;
     }
 
-    public LoginResponseDto login(LoginRequestDto loginDto) {
+    public LoginResponseDto login(@Valid LoginRequestDto loginDto) {
         var user = userRepository.findByEmail(loginDto.email());
         
         if(user.isEmpty() || !user.get().isLoginCorrect(loginDto, bCryptPasswordEncoder)) {
@@ -72,7 +75,7 @@ public class AuthService {
         return new LoginResponseDto(jwtValue, expireIn);
     }
 
-    public void register(RegisterDto registerDto) throws InvalidPasswordException {
+    public void register(@Valid RegisterDto registerDto) throws InvalidPasswordException {
         var userFromDto = userRepository.findByEmail(registerDto.email());
 
         if (userFromDto.isPresent()) {
@@ -95,8 +98,8 @@ public class AuthService {
                 .build();
                 
         
-        userRepository.save(user);
-        welcomeEmail.publishMessageEmail(userRepository.findByEmail(user.getEmail()).get());
+        var userSaved = userRepository.save(user);
+        welcomeEmail.publishMessageEmail(userSaved);
     }
 
     public void sendResetEmail(String email){
@@ -106,7 +109,7 @@ public class AuthService {
         resetEmail.publishMessageEmail(user.get());
     }
 
-    public void changePassword(ResetPasswordDto resetDto) throws InvalidTokenException, InvalidPasswordException, ExpireTokenException {
+    public void changePassword(@Valid ResetPasswordDto resetDto) throws InvalidTokenException, InvalidPasswordException, ExpireTokenException {
         TokenModel tokenModel = tokenRepository.findByTokenValue(resetDto.token())
                         .orElseThrow(() -> new InvalidTokenException("The token is incorret or not exist"));
 
@@ -119,7 +122,10 @@ public class AuthService {
                 "1 uppercase letter, 1 lowercase letter, 1 special character, and no spaces."
             );
         }
-        var user = userRepository.findById(tokenModel.getUser().getId()).get();
+
+        var userId = tokenModel.getUser().getId();
+
+        var user = userRepository.findById(userId).get();
         
         user.setPassword(bCryptPasswordEncoder.encode(resetDto.newPassword()));
         userRepository.save(user);

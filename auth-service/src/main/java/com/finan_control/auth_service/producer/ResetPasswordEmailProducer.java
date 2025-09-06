@@ -30,6 +30,7 @@ public class ResetPasswordEmailProducer extends EmailProducer{
 
     @Override
     public void publishMessageEmail(UserModel userModel) {
+        var now = Instant.now();
         var tokenValue = TokenGenerator.generateSafeToken();
         
         EmailDto emailDto = EmailDto.builder()
@@ -41,8 +42,8 @@ public class ResetPasswordEmailProducer extends EmailProducer{
         rabbitTemplate.convertAndSend("", routingKey, emailDto);
 
         var token = TokenModel.builder()
-            .createdAt(Instant.now())
-            .expireAt(Instant.now().plusSeconds(900))
+            .createdAt(now)
+            .expireAt(now.plusSeconds(900))
             .tokenValue(tokenValue)
             .user(userModel)
             .build();

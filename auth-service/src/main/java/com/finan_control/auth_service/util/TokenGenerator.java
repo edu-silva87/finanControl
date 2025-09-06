@@ -5,7 +5,7 @@ import java.util.Base64;
 import java.util.Base64.Encoder;
 
 public final class TokenGenerator {
-    private static final int BYTE_SIZE = 8;
+    private static final int BYTE_SIZE = 9;
 
     public static String generateSafeToken() {
         SecureRandom random = new SecureRandom();

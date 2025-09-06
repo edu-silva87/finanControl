@@ -16,6 +16,8 @@ import com.finan_control.auth_service.exceptions.InvalidPasswordException;
 import com.finan_control.auth_service.exceptions.InvalidTokenException;
 import com.finan_control.auth_service.service.AuthService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("auth")
 public class AuthController {
@@ -27,26 +29,26 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginDto){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto loginDto){
         return ResponseEntity
         .ok()
         .body(authService.login(loginDto));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterDto registerDto) throws InvalidPasswordException{
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterDto registerDto) throws InvalidPasswordException{
         authService.register(registerDto);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/sendResetEmail")
-    public ResponseEntity<String> sendResetEmail(@RequestBody PasswordDto sendResetEmailDto){
+    public ResponseEntity<String> sendResetEmail(@RequestBody @Valid PasswordDto sendResetEmailDto){
         authService.sendResetEmail(sendResetEmailDto.email());
         return ResponseEntity.ok().body("Token to reset password is send.");
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<String> changePassword(@RequestBody ResetPasswordDto resetDto) throws
+    public ResponseEntity<String> changePassword(@RequestBody @Valid ResetPasswordDto resetDto) throws
                                             InvalidTokenException, InvalidPasswordException, ExpireTokenException{
         authService.changePassword(resetDto);
         return ResponseEntity.ok().body("Successful in change password");
