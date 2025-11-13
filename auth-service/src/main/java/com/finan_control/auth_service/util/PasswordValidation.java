@@ -8,13 +8,12 @@ public final class PasswordValidation {
         throw new AssertionError("Utility class - must not be instantiated");
     }
 
-    
-    private static final String PASSWORD_PATTERN = 
-        "^(?=.*[0-9])" +          
-        "(?=.*[a-z])" +           
-        "(?=.*[A-Z])" +           
-        "(?=.*[@#$%^&+=!])" +     
-        "(?=\\S+$).{8,}$";   
+    private static final String PASSWORD_PATTERN =
+            "^(?=.*[0-9])" +
+                    "(?=.*[a-z])" +
+                    "(?=.*[A-Z])" +
+                    "(?=.*[@#$%^&+=!])" +
+                    "(?=\\S+$).{8,}$";
 
     private static final Pattern PATTERN = Pattern.compile(PASSWORD_PATTERN);
 

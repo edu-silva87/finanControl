@@ -22,34 +22,34 @@ import jakarta.validation.Valid;
 @RequestMapping("auth")
 public class AuthController {
 
-    private AuthService authService;
+    private final AuthService authService;
 
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto loginDto){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto loginDto) {
         return ResponseEntity
-        .ok()
-        .body(authService.login(loginDto));
+                .ok()
+                .body(authService.login(loginDto));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid RegisterDto registerDto) throws InvalidPasswordException{
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterDto registerDto) throws InvalidPasswordException {
         authService.register(registerDto);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/sendResetEmail")
-    public ResponseEntity<String> sendResetEmail(@RequestBody @Valid PasswordDto sendResetEmailDto){
+    public ResponseEntity<String> sendResetEmail(@RequestBody @Valid PasswordDto sendResetEmailDto) {
         authService.sendResetEmail(sendResetEmailDto.email());
         return ResponseEntity.ok().body("Token to reset password is send.");
     }
 
     @PostMapping("/changePassword")
     public ResponseEntity<String> changePassword(@RequestBody @Valid ResetPasswordDto resetDto) throws
-                                            InvalidTokenException, InvalidPasswordException, ExpireTokenException{
+            InvalidTokenException, InvalidPasswordException, ExpireTokenException {
         authService.changePassword(resetDto);
         return ResponseEntity.ok().body("Successful in change password");
     }

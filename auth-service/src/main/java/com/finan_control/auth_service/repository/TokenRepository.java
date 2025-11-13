@@ -1,11 +1,10 @@
 package com.finan_control.auth_service.repository;
 
-import java.util.Optional;
-import java.util.UUID;
-
+import com.finan_control.auth_service.model.TokenModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.finan_control.auth_service.model.TokenModel;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface TokenRepository extends JpaRepository<TokenModel, UUID> {
 
