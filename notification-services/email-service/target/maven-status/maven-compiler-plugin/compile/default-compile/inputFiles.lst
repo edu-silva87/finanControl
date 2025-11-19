@@ -1,0 +1,8 @@
+C:\Users\roger\Desktop\Edu\MyProjects\finanControl\notification-service\email-service\src\main\java\com\finan_control\email_service\config\RabbitMQConfig.java
+C:\Users\roger\Desktop\Edu\MyProjects\finanControl\notification-service\email-service\src\main\java\com\finan_control\email_service\consumers\EmailConsumer.java
+C:\Users\roger\Desktop\Edu\MyProjects\finanControl\notification-service\email-service\src\main\java\com\finan_control\email_service\dtos\EmailRecodDto.java
+C:\Users\roger\Desktop\Edu\MyProjects\finanControl\notification-service\email-service\src\main\java\com\finan_control\email_service\EmailServiceApplication.java
+C:\Users\roger\Desktop\Edu\MyProjects\finanControl\notification-service\email-service\src\main\java\com\finan_control\email_service\enums\StatusEmail.java
+C:\Users\roger\Desktop\Edu\MyProjects\finanControl\notification-service\email-service\src\main\java\com\finan_control\email_service\models\EmailModel.java
+C:\Users\roger\Desktop\Edu\MyProjects\finanControl\notification-service\email-service\src\main\java\com\finan_control\email_service\repository\EmailRepository.java
+C:\Users\roger\Desktop\Edu\MyProjects\finanControl\notification-service\email-service\src\main\java\com\finan_control\email_service\services\EmailService.java

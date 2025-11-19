@@ -1,0 +1,8 @@
+com\finan_control\email_service\repository\EmailRepository.class
+com\finan_control\email_service\consumers\EmailConsumer.class
+com\finan_control\email_service\config\RabbitMQConfig.class
+com\finan_control\email_service\services\EmailService.class
+com\finan_control\email_service\EmailServiceApplication.class
+com\finan_control\email_service\models\EmailModel.class
+com\finan_control\email_service\dtos\EmailRecodDto.class
+com\finan_control\email_service\enums\StatusEmail.class
