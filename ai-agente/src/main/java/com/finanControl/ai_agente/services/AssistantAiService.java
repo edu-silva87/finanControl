@@ -1,5 +1,6 @@
 package com.finanControl.ai_agente.services;
 
+import com.finanControl.ai_agente.dto.AiResponseDto;
 import dev.langchain4j.service.Result;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
@@ -41,7 +42,7 @@ public interface AssistantAiService {
         Fazer suposições não comprovadas
         Ignorar falhas ou ausência de dados retornados pela ferramenta.
         """)
-    Result<String> handleRequest(
+    Result<AiResponseDto> handleRequest(
             @UserMessage("Analise os gastos do usuário com ID: {{userId}}")
             @V("userId") UUID userId);
 }

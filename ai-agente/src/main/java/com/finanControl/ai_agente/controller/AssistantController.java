@@ -1,5 +1,6 @@
 package com.finanControl.ai_agente.controller;
 
+import com.finanControl.ai_agente.dto.AiResponseDto;
 import com.finanControl.ai_agente.services.AssistantAiService;
 import dev.langchain4j.service.Result;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,8 @@ public class AssistantController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, String>> askAi(){
-
-        Result<String> result = assistantAiService.handleRequest(UUID.randomUUID());
-        return ResponseEntity.ok(Map.of("response", result.content()));
+    public ResponseEntity<AiResponseDto> askAi(){
+        Result<AiResponseDto> result = assistantAiService.handleRequest(UUID.randomUUID());
+        return ResponseEntity.ok(result.content());
     }
 }
