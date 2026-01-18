@@ -2,21 +2,24 @@ package com.finanControl.user_service.dtos;
 
 import com.finanControl.user_service.enums.TypeExpense;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
 public record ReplaceExpenseDto(
-        @NotBlank
+        @NotNull
         UUID expenseId,
-        @NotBlank
+        @NotNull
         TypeExpense typeExpense,
         @NotBlank
         String name,
-        @NotBlank
+        @NotNull
+        @Positive
         BigDecimal price,
-        @NotBlank
+        @NotNull
         LocalDate date
 ) {
 }

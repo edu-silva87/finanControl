@@ -34,8 +34,9 @@ public class UserService {
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         Optional<User> user = userRepository.findByEmail(loginRequestDto.email());
 
-        if (user.isEmpty() || user.get().isCorrectPassword(loginRequestDto, passwordEncoder))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email or user is invalid");
+        if (user.isEmpty() || !user.get().isCorrectPassword(loginRequestDto, passwordEncoder)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email or password is invalid");
+        }
 
         var now = Instant.now();
         var expiresIn = 300L;

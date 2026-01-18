@@ -11,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ExpenseService {
@@ -25,21 +27,25 @@ public class ExpenseService {
         this.userRepository = userRepository;
     }
 
-    public void newExpense(NewExpenseDto newExpenseDto, String id) {
+    public void newExpense(List<NewExpenseDto> newExpenseDtoList, String id) {
         var user = userRepository.findById(UUID.fromString(id));
 
         if (user.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
 
-        var newExpense = ExpenseEntity.builder()
-                .user(user.get())
-                .name(newExpenseDto.name())
-                .price(newExpenseDto.price())
-                .typeExpense(newExpenseDto.typeExpense())
-                .date(newExpenseDto.date())
-                .build();
+        List<ExpenseEntity> entities = newExpenseDtoList.stream()
+                .map(dto -> {
+                    return ExpenseEntity.builder()
+                            .user(user.get())
+                            .name(dto.name())
+                            .typeExpense(dto.typeExpense())
+                            .price(dto.price())
+                            .date(dto.date())
+                            .build();
+                })
+                .collect(Collectors.toList());
 
-        expenseRepository.save(newExpense);
+        expenseRepository.saveAll(entities);
 
     }
 

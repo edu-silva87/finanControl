@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -21,9 +23,9 @@ public class UserController {
     }
 
     @PostMapping("/newExpense")
-    public ResponseEntity<Void> newExpense(@RequestBody NewExpenseDto newExpense,
+    public ResponseEntity<Void> newExpense(@RequestBody List<NewExpenseDto> newExpenses,
                                            JwtAuthenticationToken token) {
-        expenseService.newExpense(newExpense, token.getName());
+        expenseService.newExpense(newExpenses, token.getName());
         return ResponseEntity.ok().build();
     }
 
